@@ -44,7 +44,8 @@ export function DeskChat({ onClose }: Props) {
   const send = async (text: string) => {
     const prompt = text.trim();
     if (!prompt || busy) return;
-    const nextTurns: DeskChatTurn[] = [...turns, { role: "user", content: prompt }];
+    const previousTurns = turns;
+    const nextTurns: DeskChatTurn[] = [...previousTurns, { role: "user", content: prompt }];
     setTurns(nextTurns);
     setDraft("");
     setBusy(true);
@@ -53,11 +54,15 @@ export function DeskChat({ onClose }: Props) {
       const result = await askDeskGrok({ data: { messages: nextTurns, deskContext } });
       if (!result.ok) {
         setError(result.error);
+        setTurns(previousTurns);
+        setDraft(prompt);
         return;
       }
       setTurns([...nextTurns, { role: "assistant", content: result.text || "No reply." }]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not reach Grok Fast.");
+      setTurns(previousTurns);
+      setDraft(prompt);
     } finally {
       setBusy(false);
     }

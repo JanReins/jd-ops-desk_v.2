@@ -351,7 +351,7 @@ export const DEMO_CLIENTS: ClientSeed[] = [
     junior: "Jan",
     senior: "JCh",
     manager: "JC",
-    services: svc({ monthlyBAS: true }),
+    services: svc({ monthlyBAS: false }),
     maDueDay: 0,
     notes: "20 non-group entities. Monthly BAS is an entity pack — one cell per entity, not one client row.",
     folderStatus: "Done",

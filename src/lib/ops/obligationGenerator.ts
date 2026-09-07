@@ -122,34 +122,36 @@ export function generateNextMonthCandidates(
       });
     };
 
-    if (s.monthlyBAS && !isMetkaClient(client.id)) {
-      addIfNotExist(
-        "bas_ias",
-        clampDate(followingYear, followingMonthNum, 21),
-        "Lodge monthly BAS",
-        "Monthly BAS",
-        { sourceSheet: "BAS-IAS Tracker" },
-      );
-    }
+    if (!isMetkaClient(client.id)) {
+      if (s.monthlyBAS) {
+        addIfNotExist(
+          "bas_ias",
+          clampDate(followingYear, followingMonthNum, 21),
+          "Lodge monthly BAS",
+          "Monthly BAS",
+          { sourceSheet: "BAS-IAS Tracker" },
+        );
+      }
 
-    if (s.twoMonthlyIAS && targetMonthNum % 2 === 0) {
-      addIfNotExist(
-        "bas_ias",
-        clampDate(followingYear, followingMonthNum, 21),
-        "Lodge 2-monthly IAS",
-        "2-monthly IAS",
-        { sourceSheet: "BAS-IAS Tracker" },
-      );
-    }
+      if (s.twoMonthlyIAS && targetMonthNum % 2 === 0) {
+        addIfNotExist(
+          "bas_ias",
+          clampDate(followingYear, followingMonthNum, 21),
+          "Lodge 2-monthly IAS",
+          "2-monthly IAS",
+          { sourceSheet: "BAS-IAS Tracker" },
+        );
+      }
 
-    if (s.quarterlyBAS && [3, 6, 9, 12].includes(targetMonthNum)) {
-      addIfNotExist(
-        "bas_ias",
-        clampDate(followingYear, followingMonthNum, 21),
-        "Lodge quarterly BAS",
-        "QTR BAS",
-        { sourceSheet: "BAS-IAS Tracker" },
-      );
+      if (s.quarterlyBAS && [3, 6, 9, 12].includes(targetMonthNum)) {
+        addIfNotExist(
+          "bas_ias",
+          clampDate(followingYear, followingMonthNum, 21),
+          "Lodge quarterly BAS",
+          "QTR BAS",
+          { sourceSheet: "BAS-IAS Tracker" },
+        );
+      }
     }
 
     if (s.weeklyBooks) {

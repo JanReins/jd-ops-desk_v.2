@@ -179,27 +179,32 @@ export function DataProvider({ children }: { children: ReactNode }) {
         }
 
         const [currClients, loadedObs] = await Promise.all([getAllClients(UID), getAllObligations(UID)]);
+        const supersede = loadedObs.filter(
+          (o) =>
+            o.clientId === "client-metka" &&
+            o.workstream === "bas_ias" &&
+            !o.entityName &&
+            o.status !== "Done" &&
+            o.status !== "Not applicable",
+        );
+        if (supersede.length > 0) {
+          const now = new Date().toISOString();
+          await batchPutObligations(
+            supersede.map((o) => ({
+              ...o,
+              status: "Not applicable" as const,
+              notes: [o.notes, "Replaced by Metka entity pack (one BAS cell per entity)."]
+                .filter(Boolean)
+                .join("\n"),
+              updatedAt: now,
+            })),
+          );
+        }
         const packMigrated = await getMeta<number>(METKA_PACK_KEY);
         if (!packMigrated) {
-          const supersede = loadedObs.filter(
-            (o) => isGenericMetkaBas(o) && (o.status === "Not started" || o.status === "In progress"),
-          );
-          if (supersede.length > 0) {
-            const now = new Date().toISOString();
-            await batchPutObligations(
-              supersede.map((o) => ({
-                ...o,
-                status: "Not applicable" as const,
-                notes: [o.notes, "Replaced by Metka entity pack (one BAS cell per entity)."]
-                  .filter(Boolean)
-                  .join("\n"),
-                updatedAt: now,
-              })),
-            );
-          }
           await setMeta(METKA_PACK_KEY, 1);
         }
-        const afterMigrate = packMigrated ? loadedObs : await getAllObligations(UID);
+        const afterMigrate = supersede.length > 0 ? await getAllObligations(UID) : loadedObs;
         const missing = generateRollingHorizon(currClients, afterMigrate, 2);
         if (missing.length > 0) {
           await batchPutObligations(stampCandidates(missing));
@@ -210,7 +215,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
           const closed = await getMeta<string>(LAST_CLOSED_KEY);
           setLastClosedDate(closed);
           const storedTemplates = await getMeta<RecurringTemplate[]>(TEMPLATES_KEY);
-          if (storedTemplates && storedTemplates.length > 0) {
+          if (storedTemplates !== null && storedTemplates !== undefined) {
             setTemplates(storedTemplates);
           } else {
             await setMeta(TEMPLATES_KEY, DEMO_TEMPLATES);
