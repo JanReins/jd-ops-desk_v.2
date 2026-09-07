@@ -9,6 +9,13 @@ export function FastCapture() {
   const { clients, obligations, addObligation, updateObligation } = useData();
   const active = clients.filter((c) => !c.inactive);
   const [clientId, setClientId] = useState(active[0]?.id ?? "");
+
+  useEffect(() => {
+    if (!clientId && active.length > 0) {
+      setClientId(active[0].id);
+    }
+  }, [active, clientId]);
+
   const client = active.find((c) => c.id === clientId) || active[0];
   const [line, setLine] = useState("");
   const [dueDate, setDueDate] = useState(getMelbourneToday());

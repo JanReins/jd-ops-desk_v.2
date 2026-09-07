@@ -11,41 +11,7 @@ import {
 } from "./dates";
 import { isOpenStatus } from "./todaySet";
 
-export const DEMO_TEMPLATES: RecurringTemplate[] = [
-  {
-    id: "tpl-timesheet",
-    clientId: "client-practice",
-    workstream: "admin",
-    cadence: "weekly",
-    dueRule: "today",
-    taskLabel: "Timesheet",
-    nextAction: "Complete this week's timesheet",
-    estimatedMinutes: 20,
-    pinOnSpawn: true,
-  },
-  {
-    id: "tpl-bas-catch",
-    clientId: "client-practice",
-    workstream: "bas_ias",
-    cadence: "monthly",
-    dueRule: "21_next",
-    taskLabel: "BAS & IAS — remaining clients",
-    nextAction: "Work through tracker cells that are still Not started",
-    estimatedMinutes: 90,
-    pinOnSpawn: true,
-  },
-  {
-    id: "tpl-leave-check",
-    clientId: "client-practice",
-    workstream: "admin",
-    cadence: "monthly",
-    dueRule: "eom",
-    taskLabel: "Leave / admin catch-up",
-    nextAction: "Park personal admin that is still open",
-    estimatedMinutes: 25,
-    pinOnSpawn: false,
-  },
-];
+export const DEMO_TEMPLATES: RecurringTemplate[] = [];
 
 export function nextDueForTemplate(template: RecurringTemplate, today = getMelbourneToday()): string {
   if (template.dueRule === "today") {

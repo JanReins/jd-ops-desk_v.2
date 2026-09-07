@@ -1,5 +1,5 @@
-import type { Obligation, ObligationStatus, Workstream } from "./types";
-import { getMelbourneCurrentPeriod, getMelbourneToday } from "./dates";
+import type { Obligation, ObligationStatus, Workstream } from "./types.ts";
+import { getMelbourneCurrentPeriod, getMelbourneToday } from "./dates.ts";
 
 /** Soft cap for open items on today's stack — Excel daily planner length. */
 export const TODAY_SOFT_CAP = 10;
